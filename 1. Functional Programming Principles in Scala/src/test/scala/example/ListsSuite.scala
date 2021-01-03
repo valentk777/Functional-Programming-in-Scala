@@ -1,11 +1,10 @@
 package example
 
+import example.Lists._
 import org.junit.Assert.assertEquals
 import org.junit._
 
-/**
- * a JUnit test suite; run this test suite, start "sbt" then run the "test" command.
- */
+// JUnit test suite; run this test suite, start "sbt" then run the "test" command.
 class ListsSuite {
   @Test def `one plus one is two (0pts)`: Unit = {
     assertEquals(1 + 1, 2)
@@ -32,32 +31,50 @@ class ListsSuite {
     else x
   }
 
-  /**
-   * Now we finally write some tests for the list functions that have to be
-   * implemented for this assignment. We fist import all members of the
-   * `List` object.
-   */
+  @Test def `sum of positive numbers (10pts)`: Unit = {
+    assertEquals(sum(List(1, 2, 5, 0)), 8)
+  }
 
+  @Test def `sum of negative numbers (10pts)`: Unit = {
+    assertEquals(sum(List(-1, -2, -5)), -8)
+  }
 
-  /**
-   * We only provide two very basic tests for you. Write more tests to make
-   * sure your `sum` and `max` methods work as expected.
-   *
-   * In particular, write tests for corner cases: negative numbers, zeros,
-   * empty lists, lists with repeated elements, etc.
-   *
-   * It is allowed to have multiple `assert` statements inside one test,
-   * however it is recommended to write an individual `test` statement for
-   * every tested aspect of a method.
-   */
-  //  @Test def `sum of a few numbers (10pts)`: Unit = {
-  //    assertEquals(sum(List(1, 2, 0)), 3)
-  //  }
-  //
-  //  @Test def `max of a few numbers (10pts)`: Unit = {
-  //    assertEquals(max(List(3, 7, 2)), 7)
-  //  }
+  @Test def `sum of negative and positive numbers (10pts)`: Unit = {
+    assertEquals(sum(List(-1, 2, -2)), -1)
+  }
 
+  @Test def `sum of empty array (10pts)`: Unit = {
+    assertEquals(sum(List()), 0)
+  }
+
+  @Test def `sum of repeated elements (10pts)`: Unit = {
+    assertEquals(sum(List(1, 1, 1)), 3)
+  }
+
+  @Test def `max of a positive numbers (10pts)`: Unit = {
+    assertEquals(max(List(3, 15, 2)), 15)
+  }
+
+  @Test def `max of a negative numbers (10pts)`: Unit = {
+    assertEquals(max(List(-3, -7, -2)), -2)
+  }
+
+  @Test def `max of a positive and negative numbers (10pts)`(): Unit = {
+    assertEquals(max(List(-3, 7, -2)), 7)
+  }
+
+  @Test def `max of repeated numbers (10pts)`: Unit = {
+    assertEquals(max(List(-2, -2, 4, 4)), 4)
+  }
+
+  @Test def `max of empty list (10pts)`: Unit = {
+    try {
+      max(List())
+      Assert.fail("No exception has been thrown")
+    } catch {
+      case e: NoSuchElementException => ()
+    }
+  }
 
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(1000)
 }

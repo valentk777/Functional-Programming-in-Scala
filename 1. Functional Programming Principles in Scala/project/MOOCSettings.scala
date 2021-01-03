@@ -15,8 +15,8 @@ import sbt.Keys._
 case class CourseraId(key: String, partId: String, itemId: String, premiumItemId: Option[String])
 
 /**
-  * Settings shared by all assignments, reused in various tasks.
-  */
+ * Settings shared by all assignments, reused in various tasks.
+ */
 object MOOCSettings extends AutoPlugin {
 
   object autoImport {
