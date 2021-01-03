@@ -10,14 +10,9 @@ object Lists {
    * @param xs A list of natural numbers
    * @return The sum of all elements in `xs`
    */
-  def sum(xs: List[Int]): Int = {
-    if (xs.isEmpty)
-      0
-    else
-      xs.head + sum(xs.tail)
 
-    // xs.sum
-  }
+  // xs.sum
+  def sum(xs: List[Int]): Int = if (xs.isEmpty) 0 else xs.head + sum(xs.tail)
 
   /**
    * This method returns the largest element in a list of integers. If the
@@ -34,17 +29,14 @@ object Lists {
    */
   def max(xs: List[Int]): Int = {
     if (xs.isEmpty)
-      throw new java.util.NoSuchElementException();
+      throw new java.util.NoSuchElementException()
 
     def find_max(current_max: Int, elements: List[Int]): Int = {
       if (elements.isEmpty)
         current_max
       else {
-        val new_candidate = elements.head
-        if (new_candidate > current_max)
-          find_max(new_candidate, elements.tail)
-        else
-          find_max(current_max, elements.tail)
+        val candidate = elements.head
+        find_max(if (candidate > current_max) candidate else current_max, elements.tail)
       }
     }
 
