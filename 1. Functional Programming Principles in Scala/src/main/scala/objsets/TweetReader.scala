@@ -37,8 +37,8 @@ object TweetReader {
     val buf = new StringBuffer
     for (tw <- tws) {
       val json = "{ \"user\": \"" + tw.user + "\", \"text\": \"" +
-                                    tw.text.replaceAll(""""""", "\\\\\\\"") + "\", \"retweets\": " +
-                                    tw.retweets + ".0 }"
+        tw.text.replaceAll(""""""", "\\\\\\\"") + "\", \"retweets\": " +
+        tw.retweets + ".0 }"
       buf.append(json + ",\n")
     }
     buf.toString
@@ -57,19 +57,20 @@ object TweetReader {
   private val sources = List(gizmodoTweets, techCrunchTweets, engadgetTweets, amazondealsTweets, cnetTweets, gadgetlabTweets, mashableTweets)
 
   val tweetMap: Map[String, List[Tweet]] =
-    Map() ++ Seq((sites(0) -> gizmodoTweets),
-                 (sites(1) -> techCrunchTweets),
-                 (sites(2) -> engadgetTweets),
-                 (sites(3) -> amazondealsTweets),
-                 (sites(4) -> cnetTweets),
-                 (sites(5) -> gadgetlabTweets),
-                 (sites(6) -> mashableTweets))
+    Map() ++ Seq(sites.head -> gizmodoTweets,
+      sites(1) -> techCrunchTweets,
+      sites(2) -> engadgetTweets,
+      sites(3) -> amazondealsTweets,
+      sites(4) -> cnetTweets,
+      sites(5) -> gadgetlabTweets,
+      sites(6) -> mashableTweets)
 
   val tweetSets: List[TweetSet] = sources.map(tweets => toTweetSet(tweets))
 
   private val siteTweetSetMap: Map[String, TweetSet] =
     Map() ++ (sites zip tweetSets)
 
+  @scala.annotation.tailrec
   private def unionOfAllTweetSets(curSets: List[TweetSet], acc: TweetSet): TweetSet =
     if (curSets.isEmpty) acc
     else unionOfAllTweetSets(curSets.tail, acc.union(curSets.head))

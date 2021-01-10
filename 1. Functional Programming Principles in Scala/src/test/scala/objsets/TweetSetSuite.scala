@@ -1,18 +1,21 @@
 package objsets
 
-import org.junit._
 import org.junit.Assert.assertEquals
+import org.junit._
 
 class TweetSetSuite {
+
   trait TestSets {
     val set1 = new Empty
-    val set2 = set1.incl(new Tweet("a", "a body", 20))
-    val set3 = set2.incl(new Tweet("b", "b body", 20))
+    val set2: TweetSet = set1.incl(new Tweet("a", "a body", 20))
+    val set3: TweetSet = set2.incl(new Tweet("b", "b body", 20))
     val c = new Tweet("c", "c body", 7)
     val d = new Tweet("d", "d body", 9)
-    val set4c = set3.incl(c)
-    val set4d = set3.incl(d)
-    val set5 = set4c.incl(d)
+    val set4c: TweetSet = set3.incl(c)
+    val set4d: TweetSet = set3.incl(d)
+    val set5: TweetSet = set4c.incl(d)
+
+    val set_test = new NonEmpty(new Tweet("a", "a body", 1), set5, set3)
   }
 
   def asSet(tweets: TweetSet): Set[Tweet] = {
@@ -53,9 +56,17 @@ class TweetSetSuite {
       assertEquals(4, size(set1.union(set5)))
     }
 
+  @Test def `most retweets: set6`: Unit =
+    new TestSets {
+      set_test.foreach(println)
+
+      val trend: Tweet = set_test.mostRetweeted
+      println(trend)
+    }
+
   @Test def `descending: set5`: Unit =
     new TestSets {
-      val trends = set5.descendingByRetweet
+      val trends: TweetList = set5.descendingByRetweet
       assert(!trends.isEmpty)
       assert(trends.head.user == "a" || trends.head.user == "b")
     }
