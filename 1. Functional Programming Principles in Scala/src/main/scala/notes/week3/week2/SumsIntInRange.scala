@@ -1,4 +1,4 @@
-package notes
+package notes.week3.week2
 
 object SumsIntInRange {
   /**

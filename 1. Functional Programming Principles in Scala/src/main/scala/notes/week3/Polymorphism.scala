@@ -1,4 +1,4 @@
-package notes
+package notes.week3
 
 object Polymorphism {
   // Const-List - immutable linked list:

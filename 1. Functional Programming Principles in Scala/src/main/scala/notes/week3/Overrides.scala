@@ -1,4 +1,4 @@
-package notes
+package notes.week3
 
 abstract class Base {
   def foo = 1

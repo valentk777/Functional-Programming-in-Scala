@@ -1,4 +1,4 @@
-package notes
+package notes.week1
 
 import scala.math.abs
 

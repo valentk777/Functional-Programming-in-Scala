@@ -1,4 +1,4 @@
-package notes
+package notes.week2
 
 object FunctionReturningFunction {
   def sumIntInRange: (Int, Int) => Int = sum(x => x)

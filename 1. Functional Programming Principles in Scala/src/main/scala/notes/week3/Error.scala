@@ -1,4 +1,4 @@
-package notes
+package notes.week3
 
 object Error {
     def error(message:String) = throw new Error(message)

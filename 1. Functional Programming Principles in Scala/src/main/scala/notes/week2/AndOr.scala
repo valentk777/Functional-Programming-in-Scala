@@ -1,4 +1,4 @@
-package notes
+package notes.week2
 
 object AndOr {
   // implementation for and(x,y) == x && y

@@ -1,4 +1,4 @@
-package notes
+package notes.week2
 
 class Rational(x: Int, y: Int) {
   require(y != 0, "Denominator must be nonzero") // illegal argument exception

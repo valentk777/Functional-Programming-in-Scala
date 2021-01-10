@@ -1,17 +1,18 @@
-package notes
+package notes.week3.week2
 
-import notes.Polymorphism.{Cons, Nil}
+import notes.week2.{FixedPointFunction, Rational}
+import notes.week3.{Empty, NonEmpty}
 
 /**
  * // how to import things
 *import example.Lists
  **
- // to import everything
+ *// to import everything
 *import example._
  **
- // to import more than one
+ *// to import more than one
 *import example.{Lists, SmthElse}
-*/
+ */
 
 object Main extends App {
   println(FixedPointFunction.sqrt(2))

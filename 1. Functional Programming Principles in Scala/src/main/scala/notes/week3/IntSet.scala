@@ -1,4 +1,4 @@
-package notes
+package notes.week3
 
 abstract class IntSet {
   def incl(x: Int): IntSet
