@@ -1,4 +1,5 @@
 package notes.week5
+
 import scala.math.Ordering
 
 object mergeSortGeneric {

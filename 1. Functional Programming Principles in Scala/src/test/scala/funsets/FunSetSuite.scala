@@ -16,31 +16,6 @@ class FunSetSuite {
   }
 
   /**
-   * When writing tests, one would often like to re-use certain values for multiple
-   * tests. For instance, we would like to create an Int-set and have multiple test
-   * about it.
-   *
-   * Instead of copy-pasting the code for creating the set into every test, we can
-   * store it in the test class using a val:
-   *
-   * val s1 = singletonSet(1)
-   *
-   * However, what happens if the method "singletonSet" has a bug and crashes? Then
-   * the test methods are not even executed, because creating an instance of the
-   * test class fails!
-   *
-   * Therefore, we put the shared values into a separate trait (traits are like
-   * abstract classes), and create an instance inside each test method.
-   *
-   */
-
-  trait TestSets {
-    val s1 = singletonSet(1)
-    val s2 = singletonSet(2)
-    val s3 = singletonSet(3)
-  }
-
-  /**
    * This test is currently disabled (by using @Ignore) because the method
    * "singletonSet" is not yet implemented and the test would fail.
    *
@@ -70,6 +45,30 @@ class FunSetSuite {
     }
   }
 
-
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(10 * 1000)
+
+  /**
+   * When writing tests, one would often like to re-use certain values for multiple
+   * tests. For instance, we would like to create an Int-set and have multiple test
+   * about it.
+   *
+   * Instead of copy-pasting the code for creating the set into every test, we can
+   * store it in the test class using a val:
+   *
+   * val s1 = singletonSet(1)
+   *
+   * However, what happens if the method "singletonSet" has a bug and crashes? Then
+   * the test methods are not even executed, because creating an instance of the
+   * test class fails!
+   *
+   * Therefore, we put the shared values into a separate trait (traits are like
+   * abstract classes), and create an instance inside each test method.
+   *
+   */
+
+  trait TestSets {
+    val s1 = singletonSet(1)
+    val s2 = singletonSet(2)
+    val s3 = singletonSet(3)
+  }
 }

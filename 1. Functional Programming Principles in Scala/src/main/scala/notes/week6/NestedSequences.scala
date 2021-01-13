@@ -36,4 +36,5 @@ object NestedSequences {
       yield x * y).sum
 
   case class Person(name: String, age: Int)
+
 }

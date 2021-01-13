@@ -7,9 +7,8 @@ class Rational(x: Int, y: Int) {
   // another constructor for class Rational
   def this(x: Int) = this(x, 1)
 
-  def numer: Int = x
-
-  def denom: Int = y
+  // we can name function name as -
+  def -(that: Rational): Rational = this + that.neg
 
   // we can name function name as +
   def +(that: Rational) =
@@ -17,20 +16,23 @@ class Rational(x: Int, y: Int) {
       numer * that.denom + that.numer * denom,
       denom * that.denom)
 
+  def neg: Rational = new Rational(-numer, denom)
+
+  def sub(that: Rational): Rational = add(that.neg)
+
   def add(that: Rational) =
     new Rational(
       numer * that.denom + that.numer * denom,
       denom * that.denom)
 
-  // we can name function name as -
-  def -(that: Rational): Rational = this + that.neg
-
-  def sub(that: Rational): Rational = add(that.neg)
-
   def *(that: Rational) =
     new Rational(
       numer * that.numer,
       denom * that.denom)
+
+  def numer: Int = x
+
+  def denom: Int = y
 
   def mul(that: Rational) =
     new Rational(
@@ -39,15 +41,13 @@ class Rational(x: Int, y: Int) {
 
   def less(that: Rational): Boolean = numer * that.denom < that.numer * denom
 
-  def <(that: Rational): Boolean = numer * that.denom < that.numer * denom
-
   def max(that: Rational): Rational = if (this < that) that else this
+
+  def <(that: Rational): Boolean = numer * that.denom < that.numer * denom
 
   // specific word unary_ to get a possibility to write -rational instead of rational.neg
   // ATTENTION: need to add space after name there, because : could be treated as a part of function as well
   def unary_- : Rational = new Rational(-numer, denom)
-
-  def neg: Rational = new Rational(-numer, denom)
 
   override def toString: String = {
     val g = gcd(x, y)

@@ -21,16 +21,16 @@ object Main extends App {
   //    else throw new Error("Unknown expression " + e)
   //  }
 
-//  def eval(e: Expression): Int = {
-//    if (e.isInstanceOf[Number])
-//      e.asInstanceOf[Number].numValue
-//    else if (e.isInstanceOf[Sum])
-//      eval(e.asInstanceOf[Sum].leftOp) +
-//        eval(e.asInstanceOf[Sum].rightOp)
-//    else throw new Error("Unknown expression " + e)
-//  }
-//
-//  println(this.eval(new Sum(new Number(1), new Number(2))))
+  //  def eval(e: Expression): Int = {
+  //    if (e.isInstanceOf[Number])
+  //      e.asInstanceOf[Number].numValue
+  //    else if (e.isInstanceOf[Sum])
+  //      eval(e.asInstanceOf[Sum].leftOp) +
+  //        eval(e.asInstanceOf[Sum].rightOp)
+  //    else throw new Error("Unknown expression " + e)
+  //  }
+  //
+  //  println(this.eval(new Sum(new Number(1), new Number(2))))
 
   println(PatternMatching.eval(PatternMatching.Sum(PatternMatching.Number(1), PatternMatching.Number(2))))
   println(PatternMatching.show(PatternMatching.Sum(PatternMatching.Number(1), PatternMatching.Number(2))))

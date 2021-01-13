@@ -1,10 +1,11 @@
 package forcomp
 
-import org.junit._
 import org.junit.Assert.assertEquals
+import org.junit._
 
 
 class AnagramsSuite {
+
   import Anagrams._
 
   @Test def `wordOccurrences: abcd (3pts)`: Unit =
@@ -27,7 +28,6 @@ class AnagramsSuite {
 
   @Test def `wordAnagrams player (2pts)`: Unit =
     assertEquals(Set("parley", "pearly", "player", "replay"), wordAnagrams("player").toSet)
-
 
 
   @Test def `subtract: lard - r (10pts)`: Unit = {

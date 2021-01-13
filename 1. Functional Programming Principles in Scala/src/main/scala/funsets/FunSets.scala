@@ -9,11 +9,10 @@ trait FunSets extends FunSetsInterface {
    * its `contains` predicate.
    */
   override type FunSet = Int => Boolean
-
   /**
-   * Indicates whether a set contains a given element.
+   * The bounds for `forall` and `exists` are +/- 1000.
    */
-  def contains(s: FunSet, elem: Int): Boolean = s(elem)
+  val bound = 1000
 
   /**
    * Returns the set of the one given element.
@@ -43,11 +42,15 @@ trait FunSets extends FunSetsInterface {
    */
   def filter(s: FunSet, p: Int => Boolean): FunSet = x => contains(s, x) && p(x)
 
+  /**
+   * Returns a set transformed by applying `f` to each element of `s`.
+   */
+  def map(s: FunSet, f: Int => Int): FunSet = y => exists(s, x => y == f(x))
 
   /**
-   * The bounds for `forall` and `exists` are +/- 1000.
+   * Returns whether there exists a bounded integer within `s` that satisfies `p`.
    */
-  val bound = 1000
+  def exists(s: FunSet, p: Int => Boolean): Boolean = !forall(s, x => !p(x))
 
   /**
    * Returns whether all bounded integers within `s` satisfy `p`.
@@ -64,14 +67,16 @@ trait FunSets extends FunSetsInterface {
   }
 
   /**
-   * Returns whether there exists a bounded integer within `s` that satisfies `p`.
+   * Indicates whether a set contains a given element.
    */
-  def exists(s: FunSet, p: Int => Boolean): Boolean = !forall(s, x => !p(x))
+  def contains(s: FunSet, elem: Int): Boolean = s(elem)
 
   /**
-   * Returns a set transformed by applying `f` to each element of `s`.
+   * Prints the contents of a set on the console.
    */
-  def map(s: FunSet, f: Int => Int): FunSet = y => exists(s, x => y == f(x))
+  def printSet(s: FunSet): Unit = {
+    println(toString(s))
+  }
 
   /**
    * Displays the contents of a set
@@ -79,13 +84,6 @@ trait FunSets extends FunSetsInterface {
   def toString(s: FunSet): String = {
     val xs = for (i <- -bound to bound if contains(s, i)) yield i
     xs.mkString("{", ",", "}")
-  }
-
-  /**
-   * Prints the contents of a set on the console.
-   */
-  def printSet(s: FunSet): Unit = {
-    println(toString(s))
   }
 }
 

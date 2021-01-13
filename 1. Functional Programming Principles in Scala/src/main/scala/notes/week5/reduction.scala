@@ -19,9 +19,9 @@ object reduction {
   def concat[T](xs: List[T], ys: List[T]): List[T] =
     (xs foldRight ys) (_ :: _)
 
-//  def mapFun[T, U](xs: List[T], f: T => U): List[U] =
-//    (xs foldRight List[U]()) (???)
-//
-//  def lengthFun[T](xs: List[T]): Int =
-//    (xs foldRight 0) (???)
+  //  def mapFun[T, U](xs: List[T], f: T => U): List[U] =
+  //    (xs foldRight List[U]()) (???)
+  //
+  //  def lengthFun[T](xs: List[T]): Int =
+  //    (xs foldRight 0) (???)
 }

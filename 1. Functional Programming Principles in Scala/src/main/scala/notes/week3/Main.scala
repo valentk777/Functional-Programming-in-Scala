@@ -9,5 +9,5 @@ object Main extends App {
   println(t2)
   println(t1 union t3)
 
-//  val listTest = new Cons(1, Cons(2, Cons(3, new Nil)))
+  //  val listTest = new Cons(1, Cons(2, Cons(3, new Nil)))
 }

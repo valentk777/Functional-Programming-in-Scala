@@ -5,27 +5,6 @@ import org.junit._
 
 class TweetSetSuite {
 
-  trait TestSets {
-    val set1 = new Empty
-    val set2: TweetSet = set1.incl(new Tweet("a", "a body", 20))
-    val set3: TweetSet = set2.incl(new Tweet("b", "b body", 20))
-    val c = new Tweet("c", "c body", 7)
-    val d = new Tweet("d", "d body", 9)
-    val set4c: TweetSet = set3.incl(c)
-    val set4d: TweetSet = set3.incl(d)
-    val set5: TweetSet = set4c.incl(d)
-
-    val set_test = new NonEmpty(new Tweet("a", "a body", 1), set5, set3)
-  }
-
-  def asSet(tweets: TweetSet): Set[Tweet] = {
-    var res = Set[Tweet]()
-    tweets.foreach(res += _)
-    res
-  }
-
-  def size(set: TweetSet): Int = asSet(set).size
-
   @Test def `filter: on empty set`: Unit =
     new TestSets {
       assertEquals(0, size(set1.filter(tw => tw.user == "a")))
@@ -45,6 +24,14 @@ class TweetSetSuite {
     new TestSets {
       assertEquals(4, size(set4c.union(set4d)))
     }
+
+  def size(set: TweetSet): Int = asSet(set).size
+
+  def asSet(tweets: TweetSet): Set[Tweet] = {
+    var res = Set[Tweet]()
+    tweets.foreach(res += _)
+    res
+  }
 
   @Test def `union: with empty set1`: Unit =
     new TestSets {
@@ -71,6 +58,18 @@ class TweetSetSuite {
       assert(trends.head.user == "a" || trends.head.user == "b")
     }
 
-
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(10 * 1000)
+
+  trait TestSets {
+    val set1 = new Empty
+    val set2: TweetSet = set1.incl(new Tweet("a", "a body", 20))
+    val set3: TweetSet = set2.incl(new Tweet("b", "b body", 20))
+    val c = new Tweet("c", "c body", 7)
+    val d = new Tweet("d", "d body", 9)
+    val set4c: TweetSet = set3.incl(c)
+    val set4d: TweetSet = set3.incl(d)
+    val set5: TweetSet = set4c.incl(d)
+
+    val set_test = new NonEmpty(new Tweet("a", "a body", 1), set5, set3)
+  }
 }

@@ -1,10 +1,10 @@
 package notes.week5
 
 object Main extends App {
-  def removeAt(n: Int, xs: List[Int]): List[Int] = (xs take n) ::: (xs drop n + 1)
-
   val nums = List(2, -7, 5, 12, -99)
   val foods = List("bread", "apple", "milk")
+
+  def removeAt(n: Int, xs: List[Int]): List[Int] = (xs take n) ::: (xs drop n + 1)
 
   println(mergeSortForInt.msort(nums))
   println(mergeSortGeneric.msort(nums)((x: Int, y: Int) => x < y))
