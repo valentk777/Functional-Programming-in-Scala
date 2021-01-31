@@ -54,7 +54,7 @@ trait BinomialHeap extends quickcheck.Heap {
 trait Bogus1BinomialHeap extends BinomialHeap {
   override def findMin(ts: H) = ts match {
     case Nil => throw new NoSuchElementException("min of empty heap")
-    case t :: ts => root(t)
+    case t :: _ => root(t)
   }
 }
 
