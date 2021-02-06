@@ -29,16 +29,16 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
     findMin(h) == Math.min(a, b)
   }
 
-  //  property("minN") = forAll { (l: List[A]) =>
-  //    case class BH(b: Boolean, h: H)
-  //
-  //    val h = l.foldLeft(empty) { (h: H, a: A) => insert(a, h) }
-  //
-  //    val res = l.sorted.foldLeft(BH(true, h)) {
-  //      (bh: BH, a: A) => BH(bh.b && findMin(bh.h) == a, deleteMin(bh.h))
-  //    }
-  //    res.b && isEmpty(res.h)
-  //  }
+  property("minN") = forAll { (l: List[A]) =>
+    case class BH(b: Boolean, h: H)
+
+    val h = l.foldLeft(empty) { (h: H, a: A) => insert(a, h) }
+
+    val res = l.sorted.foldLeft(BH(b = true, h)) {
+      (bh: BH, a: A) => BH(bh.b && findMin(bh.h) == a, deleteMin(bh.h))
+    }
+    res.b && isEmpty(res.h)
+  }
 
   property("insertAndDeleteThen") = forAll { (n: A) =>
     isEmpty(deleteMin(insert(n, empty)))
@@ -61,18 +61,19 @@ abstract class QuickCheckHeap extends Properties("Heap") with IntHeap {
     findMin(meld(h1, h2)) == Math.min(findMin(h1), findMin(h2))
   }
 
-  //  property("meld") = forAll { (h1: H, h2: H) =>
-  //    def heapEqual(h1: H, h2: H): Boolean =
-  //      if (isEmpty(h1) && isEmpty(h2)) true
-  //      else {
-  //        val m1 = findMin(h1)
-  //        val m2 = findMin(h2)
-  //        m1 == m2 && heapEqual(deleteMin(h1), deleteMin(h2))
-  //      }
-  //
-  //    heapEqual(meld(h1, h2),
-  //      meld(deleteMin(h1), insert(findMin(h1), h2)))
-  //  }
+  property("meld") = forAll { (h1: H, h2: H) =>
+    @scala.annotation.tailrec
+    def heapEqual(h1: H, h2: H): Boolean =
+      if (isEmpty(h1) && isEmpty(h2)) true
+      else {
+        val m1 = findMin(h1)
+        val m2 = findMin(h2)
+        m1 == m2 && heapEqual(deleteMin(h1), deleteMin(h2))
+      }
+
+    heapEqual(meld(h1, h2),
+      meld(deleteMin(h1), insert(findMin(h1), h2)))
+  }
 
   property("empty1") = forAll { a: A =>
     val h = insert(a, empty)

@@ -2,8 +2,8 @@
 enablePlugins(StudentTasks)
 
 courseraId := ch.epfl.lamp.CourseraId(
-  key = "BwkTtD9_EeWFZSIACtiVgg",
-  itemId = "ZjaI7",
-  premiumItemId = Some("uctOq"),
-  partId = "2KYZc"
+  key = "CPJe397VEeWLGArWOseZkw",
+  itemId = "lzaCV",
+  premiumItemId = Some("nVRPb"),
+  partId = "v2XIe"
 )

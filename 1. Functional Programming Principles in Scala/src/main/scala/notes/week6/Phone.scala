@@ -15,9 +15,10 @@ object Phone {
   // invert map from to letter to number
   val charCode: Map[Char, Char] =
     for ((digit, str) <- mnem; ltr <- str) yield ltr -> digit
+
   // from number to any possible word lists
-  val wordsForNum: Map[String, Seq[String]] = (for (w <- words) yield w.toUpperCase) groupBy wordCode withDefaultValue Seq()
-  val wordsForNum2: Map[String, Seq[String]] = (words map (_ toUpperCase)) groupBy wordCode withDefaultValue Seq()
+//  val wordsForNum: Map[String, Seq[String]] = (for (w <- words) yield w.toUpperCase) groupBy wordCode withDefaultValue Seq()
+  val wordsForNum2: Map[String, Seq[String]] = words.map(x => x.toUpperCase) groupBy wordCode withDefaultValue Seq()
 
   // Maps a word to the digit string in can represent. e.g. JAVA -> "5282"
   def wordCode(word: String): String = word.toUpperCase map charCode
@@ -27,7 +28,7 @@ object Phone {
     else {
       for {
         split <- 1 to number.length
-        word <- wordsForNum(number take split)
+        word <- wordsForNum2(number take split)
         rest <- encode(number drop split)
       } yield word :: rest
     }.toSet

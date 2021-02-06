@@ -3,7 +3,7 @@ version := "0.1"
 scalaVersion := "2.13.4"
 
 course := "progfun1"
-assignment := "patmat"
+assignment := "forcomp"
 
 scalacOptions ++= Seq("-language:implicitConversions", "-deprecation")
 
