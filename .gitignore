@@ -1,8 +1,10 @@
 *.class
 *.log
 .idea
-**/target/*
-**/null/*
-**/.vscode/*
-**/resources/*
-**/slides/*
+.metals
+target
+null
+.vscode
+resources
+slides
+assignment.sbt

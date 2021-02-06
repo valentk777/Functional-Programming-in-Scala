@@ -15,16 +15,16 @@ trait GameDef {
    *
    * Illustration:
    *
-   *     0 1 2 3   <- col axis
-   *   0 o o o o
-   *   1 o o o o
-   *   2 o # o o    # is at position Pos(2, 1)
-   *   3 o o o o
+   * 0 1 2 3   <- col axis
+   * 0 o o o o
+   * 1 o o o o
+   * 2 o # o o    # is at position Pos(2, 1)
+   * 3 o o o o
    *
-   *   ^
-   *   |
+   * ^
+   * |
    *
-   *   row axis
+   * row axis
    */
   case class Pos(row: Int, col: Int) {
     /** The position obtained by changing the `row` coordinate by `d` */
@@ -70,10 +70,14 @@ trait GameDef {
    * These moves are encoded as case objects.
    */
   sealed abstract class Move
-  case object Left  extends Move
+
+  case object Left extends Move
+
   case object Right extends Move
-  case object Up    extends Move
-  case object Down  extends Move
+
+  case object Up extends Move
+
+  case object Down extends Move
 
   /**
    * This function returns the block at the start position of
@@ -106,24 +110,24 @@ trait GameDef {
 
 
     /** The block obtained by moving left */
-    def left = if (isStanding)             deltaCol(-2, -1)
-               else if (b1.row == b2.row)  deltaCol(-1, -2)
-               else                        deltaCol(-1, -1)
+    def left = if (isStanding) deltaCol(-2, -1)
+    else if (b1.row == b2.row) deltaCol(-1, -2)
+    else deltaCol(-1, -1)
 
     /** The block obtained by moving right */
-    def right = if (isStanding)            deltaCol(1, 2)
-                else if (b1.row == b2.row) deltaCol(2, 1)
-                else                       deltaCol(1, 1)
+    def right = if (isStanding) deltaCol(1, 2)
+    else if (b1.row == b2.row) deltaCol(2, 1)
+    else deltaCol(1, 1)
 
     /** The block obtained by moving up */
-    def up = if (isStanding)               deltaRow(-2, -1)
-             else if (b1.row == b2.row)    deltaRow(-1, -1)
-             else                          deltaRow(-1, -2)
+    def up = if (isStanding) deltaRow(-2, -1)
+    else if (b1.row == b2.row) deltaRow(-1, -1)
+    else deltaRow(-1, -2)
 
     /** The block obtained by moving down */
-    def down = if (isStanding)             deltaRow(1, 2)
-               else if (b1.row == b2.row)  deltaRow(1, 1)
-               else                        deltaRow(2, 1)
+    def down = if (isStanding) deltaRow(1, 2)
+    else if (b1.row == b2.row) deltaRow(1, 1)
+    else deltaRow(2, 1)
 
 
     /**
@@ -148,4 +152,5 @@ trait GameDef {
      */
     def isLegal: Boolean = ???
   }
+
 }
