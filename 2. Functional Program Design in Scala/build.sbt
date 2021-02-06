@@ -1,6 +1,3 @@
-course := "progfun2"
-assignment := "quickcheck"
-
 scalaVersion := "2.13.4"
 scalacOptions ++= Seq("-language:implicitConversions", "-deprecation")
 libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % Test

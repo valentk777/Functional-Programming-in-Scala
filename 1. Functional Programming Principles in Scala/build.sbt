@@ -2,9 +2,6 @@ name := "Functional-Programming-Principles-in-Scala"
 version := "0.1"
 scalaVersion := "2.13.4"
 
-course := "progfun1"
-assignment := "forcomp"
-
 scalacOptions ++= Seq("-language:implicitConversions", "-deprecation")
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
