@@ -34,6 +34,35 @@ class BloxorzSuite {
       assertEquals(optsolution.length, solution.length)
     }
 
+  @Test def `test neighborsWithHistory`: Unit =
+    new Level1 {
+      val expected: LazyList[(Any, List[Any])] = Set(
+        (Block(Pos(1, 2), Pos(1, 3)), List(Right, Left, Up)),
+        (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))
+      ).to(LazyList)
+
+      val actual: LazyList[(Block, List[Move])] = neighborsWithHistory(Block(Pos(1, 1), Pos(1, 1)), List(Left, Up))
+      assertEquals(expected, actual)
+    }
+
+  @Test def `test newNeighborsOnly`: Unit =
+    new Level1 {
+      val expected: LazyList[(Any, List[Any])] = Set(
+        (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))
+      ).to(LazyList)
+
+      val actual: LazyList[(Block, List[Move])] = newNeighborsOnly(
+        Set(
+          (Block(Pos(1, 2), Pos(1, 3)), List(Right, Left, Up)),
+          (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))
+        ).to(LazyList),
+
+        Set(Block(Pos(1, 2), Pos(1, 3)), Block(Pos(1, 1), Pos(1, 1)))
+      )
+
+      assertEquals(expected, actual)
+    }
+
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(10 * 1000)
 
   trait SolutionChecker extends GameDef with Solver with StringParserTerrain {
@@ -67,4 +96,5 @@ class BloxorzSuite {
 
     val optsolution = List(Right, Right, Down, Right, Right, Right, Down)
   }
+
 }
