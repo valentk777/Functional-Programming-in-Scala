@@ -8,11 +8,6 @@ class CalculatorSuite {
    * * TWEET LENGTH **
    * *****************/
 
-  import TweetLength._
-
-  def tweetLength(text: String): Int =
-    text.codePointCount(0, text.length)
-
   @Test def `tweetRemainingCharsCount with a constant signal`: Unit = {
     val result = tweetRemainingCharsCount(Var("hello world"))
     assert(result() == MaxTweetLength - tweetLength("hello world"))
@@ -38,6 +33,9 @@ class CalculatorSuite {
     assert(result() == MaxTweetLength - tweetLength("こんにちは"))
   }
 
+  def tweetLength(text: String): Int =
+    text.codePointCount(0, text.length)
+
   @Test def `colorForRemainingCharsCount with a constant signal"`: Unit = {
     val resultGreen1 = colorForRemainingCharsCount(Var(52))
     assertEquals("green", resultGreen1())
@@ -55,13 +53,6 @@ class CalculatorSuite {
     assertEquals("red", resultRed2())
   }
 
-  import Polynomial._
-
-  import Ordering.Double.TotalOrdering
-
-  def kindaEqual(a: Double, b: Double): Boolean =
-    a > b - 1e-5 && a < b + 1e-5
-
   @Test def `computeDelta test`: Unit = {
     val (a, b, c) = (Var(1.0), Var(4.0), Var(1.0))
     val result = computeDelta(a, b, c)
@@ -72,6 +63,9 @@ class CalculatorSuite {
     c() = -123.456
     assert(kindaEqual(result(), -2601.2672))
   }
+
+  def kindaEqual(a: Double, b: Double): Boolean =
+    a > b - 1e-5 && a < b + 1e-5
 
   @Test def `computeSolutions test`: Unit = {
     val (a, b, c) = (Var(1.0), Var(4.0), Var(1.0))
@@ -96,8 +90,6 @@ class CalculatorSuite {
   /** **************
    * * CALCULATOR **
    * ***************/
-
-  import Calculator._
 
   // test cases for calculator
   @Test def `Self dependency`: Unit = {

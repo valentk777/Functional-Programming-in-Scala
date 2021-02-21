@@ -6,6 +6,29 @@ package streams
 trait Solver extends GameDef {
 
   /**
+   * The lazy list of all paths that begin at the starting block.
+   */
+  lazy val pathsFromStart: LazyList[(Block, List[Move])] = from(LazyList((startBlock, Nil)), Set(startBlock))
+  /**
+   * Returns a lazy list of all possible pairs of the goal block along
+   * with the history how it was reached.
+   */
+  lazy val pathsToGoal: LazyList[(Block, List[Move])] =
+    pathsFromStart.filter { case (block: Block, _) => done(block) }
+  /**
+   * The (or one of the) shortest sequence(s) of moves to reach the
+   * goal. If the goal cannot be reached, the empty list is returned.
+   *
+   * Note: the `head` element of the returned list should represent
+   * the first move that the player should perform from the starting
+   * position.
+   */
+  lazy val solution: List[Move] = {
+    if (pathsToGoal.isEmpty) Nil
+    else pathsToGoal.head._2.reverse
+  }
+
+  /**
    * Returns `true` if the block `b` is at the final position
    */
   def done(b: Block): Boolean = b.b1 == goal && b.b2 == goal
@@ -33,7 +56,6 @@ trait Solver extends GameDef {
       ) yield (block, move :: history)
       ).to(LazyList)
 
-
   /**
    * This function returns the list of neighbors without the block
    * positions that have already been explored. We will use it to
@@ -41,7 +63,6 @@ trait Solver extends GameDef {
    */
   def newNeighborsOnly(neighbors: LazyList[(Block, List[Move])], explored: Set[Block]): LazyList[(Block, List[Move])] =
     neighbors.filter { case (block, _) => !explored.contains(block) }
-
 
   /**
    * The function `from` returns the lazy list of all possible paths
@@ -76,30 +97,5 @@ trait Solver extends GameDef {
 
       initial #::: from(morePaths, explored ++ morePaths.map(_._1))
     }
-  }
-
-  /**
-   * The lazy list of all paths that begin at the starting block.
-   */
-  lazy val pathsFromStart: LazyList[(Block, List[Move])] = from(LazyList((startBlock, Nil)), Set(startBlock))
-
-  /**
-   * Returns a lazy list of all possible pairs of the goal block along
-   * with the history how it was reached.
-   */
-  lazy val pathsToGoal: LazyList[(Block, List[Move])] =
-    pathsFromStart.filter { case (block: Block, _) => done(block) }
-
-  /**
-   * The (or one of the) shortest sequence(s) of moves to reach the
-   * goal. If the goal cannot be reached, the empty list is returned.
-   *
-   * Note: the `head` element of the returned list should represent
-   * the first move that the player should perform from the starting
-   * position.
-   */
-  lazy val solution: List[Move] = {
-    if (pathsToGoal.isEmpty) Nil
-    else pathsToGoal.head._2.reverse
   }
 }

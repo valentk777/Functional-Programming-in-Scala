@@ -28,23 +28,7 @@ trait Heap {
 trait BinomialHeap extends Heap {
 
   type Rank = Int
-
-  case class Node(x: A, r: Rank, c: List[Node])
-
   override type H = List[Node]
-
-  protected def root(t: Node) = t.x
-
-  protected def rank(t: Node) = t.r
-
-  protected def link(t1: Node, t2: Node): Node = // t1.r==t2.r
-    if (ord.lteq(t1.x, t2.x)) Node(t1.x, t1.r + 1, t2 :: t1.c) else Node(t2.x, t2.r + 1, t1 :: t2.c)
-
-  protected def ins(t: Node, ts: H): H = ts match {
-    case Nil => List(t)
-    case tp :: ts => // t.r<=tp.r
-      if (t.r < tp.r) t :: tp :: ts else ins(link(t, tp), ts)
-  }
 
   override def empty = Nil
 
@@ -82,6 +66,21 @@ trait BinomialHeap extends Heap {
       val (Node(_, _, c), tsq) = getMin(t, ts)
       meld(c.reverse, tsq)
   }
+
+  protected def root(t: Node) = t.x
+
+  protected def rank(t: Node) = t.r
+
+  protected def link(t1: Node, t2: Node): Node = // t1.r==t2.r
+    if (ord.lteq(t1.x, t2.x)) Node(t1.x, t1.r + 1, t2 :: t1.c) else Node(t2.x, t2.r + 1, t1 :: t2.c)
+
+  protected def ins(t: Node, ts: H): H = ts match {
+    case Nil => List(t)
+    case tp :: ts => // t.r<=tp.r
+      if (t.r < tp.r) t :: tp :: ts else ins(link(t, tp), ts)
+  }
+
+  case class Node(x: A, r: Rank, c: List[Node])
 }
 
 trait Bogus1BinomialHeap extends BinomialHeap {

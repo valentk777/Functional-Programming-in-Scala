@@ -7,6 +7,17 @@ import org.scalacheck.{Prop, Properties}
 object QuickCheckBinomialHeap extends QuickCheckHeap with BinomialHeap
 
 class QuickCheckSuite {
+  @Test def `Binomial heap satisfies properties. (5pts)`: Unit =
+    Assert.assertTrue(
+      check(asProp(new QuickCheckHeap with quickcheck.test.BinomialHeap))(identity).passed
+    )
+
+  @Test def `Bogus (1) binomial heap does not satisfy properties. (10pts)`: Unit =
+    checkBogus(new QuickCheckHeap with quickcheck.test.Bogus1BinomialHeap)
+
+  @Test def `Bogus (2) binomial heap does not satisfy properties. (10pts)`: Unit =
+    checkBogus(new QuickCheckHeap with quickcheck.test.Bogus2BinomialHeap)
+
   def checkBogus(p: Properties): Unit = {
     def fail = throw new AssertionError(
       s"A bogus heap should NOT satisfy all properties. Try to find the bug!")
@@ -25,17 +36,6 @@ class QuickCheckSuite {
 
   /** Turns a `Properties` instance into a single `Prop` by combining all the properties */
   def asProp(properties: Properties): Prop = Prop.all(properties.properties.map(_._2).toSeq: _*)
-
-  @Test def `Binomial heap satisfies properties. (5pts)`: Unit =
-    Assert.assertTrue(
-      check(asProp(new QuickCheckHeap with quickcheck.test.BinomialHeap))(identity).passed
-    )
-
-  @Test def `Bogus (1) binomial heap does not satisfy properties. (10pts)`: Unit =
-    checkBogus(new QuickCheckHeap with quickcheck.test.Bogus1BinomialHeap)
-
-  @Test def `Bogus (2) binomial heap does not satisfy properties. (10pts)`: Unit =
-    checkBogus(new QuickCheckHeap with quickcheck.test.Bogus2BinomialHeap)
 
   @Test def `Bogus (3) binomial heap does not satisfy properties. (10pts)`: Unit =
     checkBogus(new QuickCheckHeap with quickcheck.test.Bogus3BinomialHeap)

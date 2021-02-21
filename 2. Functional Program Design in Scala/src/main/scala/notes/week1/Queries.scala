@@ -15,9 +15,9 @@ object queries {
   for (b <- books; a <- b.authors if a startsWith "a1")
     yield b.title
 
-//  books flatMap (b =>
-//    b.authors withFilter(a => a startsWith "a1") map (y => y.title)
-//  )
+  //  books flatMap (b =>
+  //    b.authors withFilter(a => a startsWith "a1") map (y => y.title)
+  //  )
 
 
   // find all the books which have the word 1 in the title

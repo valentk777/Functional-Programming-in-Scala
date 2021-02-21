@@ -26,6 +26,11 @@ package streams
  */
 trait StringParserTerrain extends GameDef {
 
+  lazy val terrain: Terrain = terrainFunction(vector)
+  lazy val startPos: Pos = findChar('S', vector)
+  lazy val goal: Pos = findChar('T', vector)
+  private lazy val vector: Vector[Vector[Char]] =
+    Vector(level.split("\r?\n").map(str => Vector(str: _*)).toIndexedSeq: _*)
   /**
    * A ASCII representation of the terrain. This field should remain
    * abstract here.
@@ -69,12 +74,5 @@ trait StringParserTerrain extends GameDef {
     val row = levelVector.find(x => x contains c).head
     Pos(levelVector indexOf row, row indexOf c)
   }
-
-  private lazy val vector: Vector[Vector[Char]] =
-    Vector(level.split("\r?\n").map(str => Vector(str: _*)).toIndexedSeq: _*)
-
-  lazy val terrain: Terrain = terrainFunction(vector)
-  lazy val startPos: Pos = findChar('S', vector)
-  lazy val goal: Pos = findChar('T', vector)
 
 }

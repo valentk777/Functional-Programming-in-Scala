@@ -15,6 +15,7 @@ package notes.week3
 trait Show[A] {
   def apply(a: A): String
 }
+
 object Show {
   implicit val showInt: Show[Int] = new Show[Int] {
     def apply(n: Int): String = s"Int($n)"

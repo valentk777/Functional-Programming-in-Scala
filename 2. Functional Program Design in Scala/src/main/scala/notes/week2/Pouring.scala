@@ -13,6 +13,32 @@ class Pouring(capacity: Vector[Int]) {
   // States
   type State = Vector[Int]
   val initialState: State = capacity map (_ => 0)
+  val glasses: Seq[Int] = 0 until capacity.length
+  val moves: Seq[Move] =
+    (for (g <- glasses) yield Empty(g)) ++
+      (for (g <- glasses) yield Fill(g)) ++
+      (for (from <- glasses; to <- glasses if from != to) yield Pour(from, to))
+  val initialPath = new Path(Nil, initialState)
+  val pathSets: Stream[Set[Path]] = from(Set(initialPath), Set(initialState))
+
+  def from(paths: Set[Path], explored: Set[State]): Stream[Set[Path]] =
+    if (paths.isEmpty) Stream.empty
+    else {
+      val more = for {
+        path <- paths
+        next <- moves map path.extend
+        if !(explored contains next.endState)
+      } yield next
+
+      paths #:: from(more, explored ++ (more map (_.endState)))
+    }
+
+  def solution(target: Int): Stream[Path] =
+    for {
+      pathSet <- pathSets
+      path <- pathSet
+      if path.endState contains target
+    } yield path
 
   // Moves
   trait Move {
@@ -34,13 +60,6 @@ class Pouring(capacity: Vector[Int]) {
     }
   }
 
-  val glasses: Seq[Int] = 0 until capacity.length
-
-  val moves: Seq[Move] =
-    (for (g <- glasses) yield Empty(g)) ++
-      (for (g <- glasses) yield Fill(g)) ++
-      (for (from <- glasses; to <- glasses if from != to) yield Pour(from, to))
-
   // Paths
   class Path(history: List[Move], val endState: State) {
     //    def endState: State = trackState(history)
@@ -56,27 +75,4 @@ class Pouring(capacity: Vector[Int]) {
 
     override def toString: String = (history.reverse mkString " ") + "--> " + endState
   }
-
-  val initialPath = new Path(Nil, initialState)
-
-  def from(paths: Set[Path], explored: Set[State]): Stream[Set[Path]] =
-    if (paths.isEmpty) Stream.empty
-    else {
-      val more = for {
-        path <- paths
-        next <- moves map path.extend
-        if !(explored contains next.endState)
-      } yield next
-
-      paths #:: from(more, explored ++ (more map (_.endState)))
-    }
-
-  val pathSets: Stream[Set[Path]] = from(Set(initialPath), Set(initialState))
-
-  def solution(target: Int): Stream[Path] =
-    for {
-      pathSet <- pathSets
-      path <- pathSet
-      if path.endState contains target
-    } yield path
 }

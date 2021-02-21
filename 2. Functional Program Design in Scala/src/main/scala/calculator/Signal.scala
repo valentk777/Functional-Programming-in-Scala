@@ -15,6 +15,13 @@ class Signal[T](expr: => T) {
 
   update(expr)
 
+  def apply(): T = {
+    observers += caller.value
+    assert(!caller.value.observers.contains(this), "cyclic signal definition")
+    caller.value.observed ::= this
+    myValue
+  }
+
   protected def computeValue(): Unit = {
     for (sig <- observed)
       sig.observers -= this
@@ -34,13 +41,6 @@ class Signal[T](expr: => T) {
   protected def update(expr: => T): Unit = {
     myExpr = () => expr
     computeValue()
-  }
-
-  def apply(): T = {
-    observers += caller.value
-    assert(!caller.value.observers.contains(this), "cyclic signal definition")
-    caller.value.observed ::= this
-    myValue
   }
 }
 

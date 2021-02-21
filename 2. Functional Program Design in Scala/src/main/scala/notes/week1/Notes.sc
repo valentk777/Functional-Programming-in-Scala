@@ -34,5 +34,5 @@ def expressionMatter(a: Int, b: Int, c: Int): Int =
     a * b * c).max
 
 
-expressionMatter(3,5,7)
+expressionMatter(3, 5, 7)
 //  max(a + b + c, a*b+c, a+b*c, a*(b+c), (a+b)*c)
