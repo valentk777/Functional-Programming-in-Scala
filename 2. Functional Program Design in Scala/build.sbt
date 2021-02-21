@@ -1,5 +1,5 @@
 course := "progfun2"
-assignment := "codecs"
+assignment := "calculator"
 
 scalaVersion := "2.13.4"
 

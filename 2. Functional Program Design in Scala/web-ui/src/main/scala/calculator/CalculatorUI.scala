@@ -1,9 +1,9 @@
 package calculator
 
-import scala.scalajs.js
 import org.scalajs.dom
-import org.scalajs.dom.html
-import dom.document
+import org.scalajs.dom.{document, html}
+
+import scala.scalajs.js
 
 object CalculatorUI {
   def main(args: Array[String]): Unit = {
@@ -23,7 +23,7 @@ object CalculatorUI {
     document.getElementById(id).asInstanceOf[A]
 
   def elementValueSignal(element: html.Element,
-      getValue: () => String): Signal[String] = {
+                         getValue: () => String): Signal[String] = {
     var prevVal = getValue()
     val value = new Var(prevVal)
     val onChange = { (event: dom.Event) =>
@@ -71,8 +71,8 @@ object CalculatorUI {
 
   def setupTweetMeasurer(): Unit = {
     val tweetText = textAreaValueSignal("tweettext")
-    val remainingCharsArea =
-      document.getElementById("tweetremainingchars").asInstanceOf[html.Span]
+
+    val remainingCharsArea = document.getElementById("tweetremainingchars").asInstanceOf[html.Span]
 
     val remainingCount = TweetLength.tweetRemainingCharsCount(tweetText)
     Signal {

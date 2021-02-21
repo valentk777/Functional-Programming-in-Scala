@@ -3,6 +3,7 @@ package calculator
 import scala.util.DynamicVariable
 
 class Signal[T](expr: => T) {
+
   import Signal._
 
   // scalafix:off
@@ -23,10 +24,10 @@ class Signal[T](expr: => T) {
      * want to be able to track the actual dependency graph in the tests.
      */
     //if (myValue != newValue) {
-      myValue = newValue
-      val obs = observers
-      observers = Set()
-      obs.foreach(_.computeValue())
+    myValue = newValue
+    val obs = observers
+    observers = Set()
+    obs.foreach(_.computeValue())
     //}
   }
 
@@ -35,7 +36,7 @@ class Signal[T](expr: => T) {
     computeValue()
   }
 
-  def apply() = {
+  def apply(): T = {
     observers += caller.value
     assert(!caller.value.observers.contains(this), "cyclic signal definition")
     caller.value.observed ::= this
@@ -57,5 +58,6 @@ object NoSignal extends Signal[Nothing](???) {
 
 object Signal {
   val caller = new DynamicVariable[Signal[_]](NoSignal)
+
   def apply[T](expr: => T) = new Signal(expr)
 }
