@@ -1,40 +1,29 @@
 package wikipedia
 
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkContext._
 import org.junit._
 
 class WikipediaSuite {
-  def initializeWikipediaRanking(): Boolean =
-    try {
-      WikipediaRanking
-      true
-    } catch {
-      case ex: Throwable =>
-        println(ex.getMessage)
-        ex.printStackTrace()
-        false
-    }
+  // Conditions:
+  // (1) the language stats contain the same elements
+  // (2) they are ordered (and the order doesn't matter if there are several languages with the same count)
+  def assertEquivalentAndOrdered(actual: List[(String, Int)], expected: List[(String, Int)]): Unit = {
+    // (1)
+    assertSameElements(actual, expected)
+    // (2)
+    assert(
+      !(actual zip actual.tail).exists({ case ((_, occ1), (_, occ2)) => occ1 < occ2 }),
+      "The given elements are not in descending order"
+    )
+  }
 
   import WikipediaRanking._
-
-  /**
-    * Creates a truncated string representation of a list, adding ", ...)" if there
-    * are too many elements to show
-    * @param l The list to preview
-    * @param n The number of elements to cut it at
-    * @return A preview of the list, containing at most n elements.
-    */
-  def previewList[A](l: List[A], n: Int = 10): String =
-    if (l.length <= n) l.toString
-    else l.take(n).toString.dropRight(1) + ", ...)"
 
   /**
     * Asserts that all the elements in a given list and an expected list are the same,
     * regardless of order. For a prettier output, given and expected should be sorted
     * with the same ordering.
-    * @param actual The actual list
+    *
+    * @param actual   The actual list
     * @param expected The expected list
     * @tparam A Type of the list elements
     */
@@ -62,25 +51,35 @@ class WikipediaSuite {
           |The given collection is missing some expected elements: ${previewList(missing.toList, 5)}""".stripMargin)
   }
 
-  // Conditions:
-  // (1) the language stats contain the same elements
-  // (2) they are ordered (and the order doesn't matter if there are several languages with the same count)
-  def assertEquivalentAndOrdered(actual: List[(String, Int)], expected: List[(String, Int)]): Unit = {
-    // (1)
-    assertSameElements(actual, expected)
-    // (2)
-    assert(
-      !(actual zip actual.tail).exists({ case ((_, occ1), (_, occ2)) => occ1 < occ2 }),
-      "The given elements are not in descending order"
-    )
-  }
+  /**
+    * Creates a truncated string representation of a list, adding ", ...)" if there
+    * are too many elements to show
+    *
+    * @param l The list to preview
+    * @param n The number of elements to cut it at
+    * @return A preview of the list, containing at most n elements.
+    */
+  def previewList[A](l: List[A], n: Int = 10): String =
+    if (l.length <= n) l.toString
+    else l.take(n).toString.dropRight(1) + ", ...)"
 
   @Test def `'occurrencesOfLang' should work for (specific) RDD with one element`: Unit = {
     assert(initializeWikipediaRanking(), " -- did you fill in all the values in WikipediaRanking (conf, sc, wikiRdd)?")
     val rdd = sc.parallelize(Seq(WikipediaArticle("title", "Java Jakarta")))
-    val res = (occurrencesOfLang("Java", rdd) == 1)
+    val res = occurrencesOfLang("Java", rdd) == 1
     assert(res, "occurrencesOfLang given (specific) RDD with one element should equal to 1")
   }
+
+  def initializeWikipediaRanking(): Boolean =
+    try {
+      WikipediaRanking
+      true
+    } catch {
+      case ex: Throwable =>
+        println(ex.getMessage)
+        ex.printStackTrace()
+        false
+    }
 
   @Test def `'rankLangs' should work for RDD with two elements`: Unit = {
     assert(initializeWikipediaRanking(), " -- did you fill in all the values in WikipediaRanking (conf, sc, wikiRdd)?")
@@ -95,10 +94,10 @@ class WikipediaSuite {
     assert(initializeWikipediaRanking(), " -- did you fill in all the values in WikipediaRanking (conf, sc, wikiRdd)?")
     val langs = List("Scala", "Java")
     val articles = List(
-        WikipediaArticle("1","Groovy is pretty interesting, and so is Erlang"),
-        WikipediaArticle("2","Scala and Java run on the JVM"),
-        WikipediaArticle("3","Scala is not purely functional")
-      )
+      WikipediaArticle("1", "Groovy is pretty interesting, and so is Erlang"),
+      WikipediaArticle("2", "Scala and Java run on the JVM"),
+      WikipediaArticle("3", "Scala is not purely functional")
+    )
     val rdd = sc.parallelize(articles)
     val index = makeIndex(langs, rdd)
     val res = index.count() == 2
@@ -109,14 +108,14 @@ class WikipediaSuite {
     assert(initializeWikipediaRanking(), " -- did you fill in all the values in WikipediaRanking (conf, sc, wikiRdd)?")
     val langs = List("Scala", "Java")
     val articles = List(
-        WikipediaArticle("1","Groovy is pretty interesting, and so is Erlang"),
-        WikipediaArticle("2","Scala and Java run on the JVM"),
-        WikipediaArticle("3","Scala is not purely functional")
-      )
+      WikipediaArticle("1", "Groovy is pretty interesting, and so is Erlang"),
+      WikipediaArticle("2", "Scala and Java run on the JVM"),
+      WikipediaArticle("3", "Scala is not purely functional")
+    )
     val rdd = sc.parallelize(articles)
     val index = makeIndex(langs, rdd)
     val ranked = rankLangsUsingIndex(index)
-    val res = (ranked.head._1 == "Scala")
+    val res = ranked.head._1 == "Scala"
     assert(res)
   }
 
@@ -124,18 +123,17 @@ class WikipediaSuite {
     assert(initializeWikipediaRanking(), " -- did you fill in all the values in WikipediaRanking (conf, sc, wikiRdd)?")
     val langs = List("Scala", "Java", "Groovy", "Haskell", "Erlang")
     val articles = List(
-        WikipediaArticle("1","Groovy is pretty interesting, and so is Erlang"),
-        WikipediaArticle("2","Scala and Java run on the JVM"),
-        WikipediaArticle("3","Scala is not purely functional"),
-        WikipediaArticle("4","The cool kids like Haskell more than Java"),
-        WikipediaArticle("5","Java is for enterprise developers")
-      )
+      WikipediaArticle("1", "Groovy is pretty interesting, and so is Erlang"),
+      WikipediaArticle("2", "Scala and Java run on the JVM"),
+      WikipediaArticle("3", "Scala is not purely functional"),
+      WikipediaArticle("4", "The cool kids like Haskell more than Java"),
+      WikipediaArticle("5", "Java is for enterprise developers")
+    )
     val rdd = sc.parallelize(articles)
     val ranked = rankLangsReduceByKey(langs, rdd)
-    val res = (ranked.head._1 == "Java")
+    val res = ranked.head._1 == "Java"
     assert(res)
   }
-
 
 
   @Rule def individualTestTimeout = new org.junit.rules.Timeout(100 * 1000)

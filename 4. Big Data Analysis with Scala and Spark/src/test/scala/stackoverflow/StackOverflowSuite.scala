@@ -14,6 +14,7 @@ object StackOverflowSuite {
 }
 
 class StackOverflowSuite {
+
   import StackOverflowSuite._
 
 
@@ -22,9 +23,13 @@ class StackOverflowSuite {
       List(
         "JavaScript", "Java", "PHP", "Python", "C#", "C++", "Ruby", "CSS",
         "Objective-C", "Perl", "Scala", "Haskell", "MATLAB", "Clojure", "Groovy")
+
     override def langSpread = 50000
+
     override def kmeansKernels = 45
+
     override def kmeansEta: Double = 20.0D
+
     override def kmeansMaxIterations = 120
   }
 
