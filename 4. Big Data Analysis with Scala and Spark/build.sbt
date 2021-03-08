@@ -11,7 +11,7 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % "3.0.2"
 )
 dependencyOverrides ++= Seq(
-  "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.7"
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.10.0"
 )
 
 testOptions in Test += Tests.Argument(TestFrameworks.JUnit, "-a", "-v", "-s")

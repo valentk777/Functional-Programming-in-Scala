@@ -1,7 +1,7 @@
 package wikipedia
 
-import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.rdd.RDD
+import org.apache.spark.{SparkConf, SparkContext}
 
 case class WikipediaArticle(title: String, text: String) {
   /**
@@ -80,7 +80,7 @@ object WikipediaRanking extends WikipediaRankingInterface {
    *   several seconds.
    */
   def rankLangsUsingIndex(index: RDD[(String, Iterable[WikipediaArticle])]): List[(String, Int)] =
-    index.map({case (lang, wikis) => (lang, wikis.size)}).collect().toList.sortWith( _._2 > _._2)
+    index.map({ case (lang, wikis) => (lang, wikis.size) }).collect().toList.sortWith(_._2 > _._2)
 
   /* (3) Use `reduceByKey` so that the computation of the index and the ranking are combined.
    *     Can you notice an improvement in performance compared to measuring *both* the computation of the index
@@ -89,7 +89,9 @@ object WikipediaRanking extends WikipediaRankingInterface {
    *   Note: this operation is long-running. It can potentially run for
    *   several seconds.
    */
-  def rankLangsReduceByKey(langs: List[String], rdd: RDD[WikipediaArticle]): List[(String, Int)] = ???
+  def rankLangsReduceByKey(langs: List[String], rdd: RDD[WikipediaArticle]): List[(String, Int)] =
+    rdd.flatMap(wiki => langs.filter(lang => wiki.mentionsLanguage(lang)).map(lang => (lang, 1)))
+      .reduceByKey((accum, _) => accum + 1).collect().sortWith(_._2 > _._2).toList
 
   def timed[T](label: String, code: => T): T = {
     val start = System.currentTimeMillis()
