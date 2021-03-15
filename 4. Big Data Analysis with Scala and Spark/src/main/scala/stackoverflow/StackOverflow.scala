@@ -1,11 +1,9 @@
 package stackoverflow
 
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.RDD
-import annotation.tailrec
-import scala.reflect.ClassTag
+import org.apache.spark.{SparkConf, SparkContext}
+
+import scala.annotation.tailrec
 
 /** A raw stackoverflow posting, either a question or an answer */
 case class Posting(postingType: Int, id: Int, acceptedAnswer: Option[Int], parentId: Option[QID], score: Int, tags: Option[String]) extends Serializable
@@ -64,15 +62,10 @@ class StackOverflow extends StackOverflowInterface with Serializable {
 
   /** Group the questions and answers together */
   def groupedPostings(postings: RDD[Posting]): RDD[(QID, Iterable[(Question, Answer)])] = {
-    ???
+    val questions = postings.filter(x => x.postingType == 1).map(q => (q.id, q))
+    val answers = postings.filter(x => x.postingType == 2).map(a => (a.parentId.get, a))
+    questions.join(answers).groupByKey()
   }
-
-
-  //
-  //
-  // Parsing utilities:
-  //
-  //
 
   /** Compute the maximum score for each posting */
   def scoredPostings(grouped: RDD[(QID, Iterable[(Question, Answer)])]): RDD[(Question, HighScore)] = {
@@ -89,7 +82,7 @@ class StackOverflow extends StackOverflowInterface with Serializable {
       highScore
     }
 
-    ???
+    grouped.flatMap(x => x._2).groupByKey().mapValues(x => answerHighScore(x.toArray))
   }
 
   /** Compute the vectors for the kmeans */
@@ -108,7 +101,7 @@ class StackOverflow extends StackOverflowInterface with Serializable {
       }
     }
 
-    ???
+    scored.map(x => (firstLangInTag(x._1.tags, langs).getOrElse(-1) * langSpread, x._2)).filter(_._1 >= 0)
   }
 
   /** Sample the vectors */
@@ -168,7 +161,9 @@ class StackOverflow extends StackOverflowInterface with Serializable {
 
   /** Main kmeans computation */
   @tailrec final def kmeans(means: Array[(Int, Int)], vectors: RDD[(Int, Int)], iter: Int = 1, debug: Boolean = false): Array[(Int, Int)] = {
-    val newMeans = means.clone() // you need to compute newMeans
+    val clustered: RDD[(Int, (Int, Int))] = vectors.map(v => (findClosest(v, means), v))
+    val clusterAvg: Map[Int, (Int, Int)] = clustered.groupByKey().mapValues(averageVectors).collect().toMap
+    val newMeans = means.indices.map(i => clusterAvg.getOrElse(i, means(i))).toArray
 
     // TODO: Fill in the newMeans array
     val distance = euclideanDistance(means, newMeans)
@@ -204,7 +199,7 @@ class StackOverflow extends StackOverflowInterface with Serializable {
   //
 
   /** Decide whether the kmeans clustering converged */
-  def converged(distance: Double) =
+  def converged(distance: Double): Boolean =
     distance < kmeansEta
 
   /** Return the euclidean distance between two points */
@@ -240,13 +235,14 @@ class StackOverflow extends StackOverflowInterface with Serializable {
   //
   //
   def clusterResults(means: Array[(Int, Int)], vectors: RDD[(LangIndex, HighScore)]): Array[(String, Double, Int, Int)] = {
-    val closest = vectors.map(p => (findClosest(p, means), p))
-    val closestGrouped = closest.groupByKey()
+    val closest: RDD[(Int, (LangIndex, HighScore))] = vectors.map(p => (findClosest(p, means), p))
+    val closestGrouped: RDD[(Int, Iterable[(LangIndex, HighScore)])] = closest.groupByKey()
 
-    val median = closestGrouped.mapValues { vs =>
-      val langLabel: String = ??? // most common language in the cluster
-      val langPercent: Double = ??? // percent of the questions in the most common language
-      val clusterSize: Int = ???
+    val median = closestGrouped.mapValues { vs: Iterable[(LangIndex, HighScore)] =>
+      val maxLangIndex = vs.groupBy(_._1).mapValues(_.size).maxBy(_._2)._1
+      val langLabel: String = langs(maxLangIndex / langSpread) // most common language in the cluster
+      val langPercent: Double = vs.count(x => x._1 == maxLangIndex).toDouble * 100 / vs.size // percent of the questions in the most common language
+      val clusterSize: Int = vs.size
       val medianScore: Int = ???
 
       (langLabel, langPercent, clusterSize, medianScore)
