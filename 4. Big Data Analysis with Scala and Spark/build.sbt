@@ -1,5 +1,5 @@
 course := "bigdata"
-assignment := "stackoverflow"
+assignment := "timeusage"
 
 scalaVersion := "2.12.12"
 
